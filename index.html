@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Digital Clock</title>
+    <link rel="stylesheet" href="dist/css/digitalclock.min.css">
+  </head>
+  <body>
+    <h2 class="text-center title">The ClockJS</h2>
+    <div id="clock">
+      <div id="one" class="number">
+        <span class="t"></span>
+        <span class="tl"></span>
+        <span class="tr"></span>
+        <span class="m"></span>
+        <span class="bl"></span>
+        <span class="br"></span>
+        <span class="b"></span>
+      </div>
+      <div id="two" class="number">
+        <span class="t"></span>
+        <span class="tl"></span>
+        <span class="tr"></span>
+        <span class="m"></span>
+        <span class="bl"></span>
+        <span class="br"></span>
+        <span class="b"></span>
+      </div>
+      <div class="colon">
+        <span class="top"></span>
+        <span class="bottom"></span>
+      </div>
+      <div id="three" class="number">
+        <span class="t"></span>
+        <span class="tl"></span>
+        <span class="tr"></span>
+        <span class="m"></span>
+        <span class="bl"></span>
+        <span class="br"></span>
+        <span class="b"></span>
+      </div>
+      <div id="four" class="number">
+        <span class="t"></span>
+        <span class="tl"></span>
+        <span class="tr"></span>
+        <span class="m"></span>
+        <span class="bl"></span>
+        <span class="br"></span>
+        <span class="b"></span>
+      </div>
+      <div class="colon">
+        <span class="top"></span>
+        <span class="bottom"></span>
+      </div>
+      <div id="five" class="number">
+        <span class="t"></span>
+        <span class="tl"></span>
+        <span class="tr"></span>
+        <span class="m"></span>
+        <span class="bl"></span>
+        <span class="br"></span>
+        <span class="b"></span>
+      </div>
+      <div id="six" class="number">
+        <span class="t"></span>
+        <span class="tl"></span>
+        <span class="tr"></span>
+        <span class="m"></span>
+        <span class="bl"></span>
+        <span class="br"></span>
+        <span class="b"></span>
+      </div>
+    </div>
+
+
+    <div class="container">
+      <button class="randomButton" onclick="ClockJS.toggleRandomColorStatus()">Randomize Colors</button> Random: <span id="randomStatus">Off</span>
+
+
+      <h2 class="text-center title">The Code</h2>
+
+
+      <h4 class="title">file: 00-number.js</h4>
+      <pre class="fifty-percent">
+// Make the numbers light up!
+
+var ClockNumber = (function () {
+
+  var numberSeq = [
+    { t: 1, tl: 1, tr: 1, m: 0, bl: 1, br: 1, b: 1 },
+    { t: 0, tl: 0, tr: 1, m: 0, bl: 0, br: 1, b: 0 },
+    { t: 1, tl: 0, tr: 1, m: 1, bl: 1, br: 0, b: 1 },
+    { t: 1, tl: 0, tr: 1, m: 1, bl: 0, br: 1, b: 1 },
+    { t: 0, tl: 1, tr: 1, m: 1, bl: 0, br: 1, b: 0 },
+    { t: 1, tl: 1, tr: 0, m: 1, bl: 0, br: 1, b: 1 },
+    { t: 1, tl: 1, tr: 0, m: 1, bl: 1, br: 1, b: 1 },
+    { t: 1, tl: 0, tr: 1, m: 0, bl: 0, br: 1, b: 0 },
+    { t: 1, tl: 1, tr: 1, m: 1, bl: 1, br: 1, b: 1 },
+    { t: 1, tl: 1, tr: 1, m: 1, bl: 0, br: 1, b: 1 }
+  ];
+
+  return {
+    turnOnNumber: function (elementID, number) {
+      var element = document.getElementById(elementID),
+        numberToTurnOn = numberSeq[number],
+        numberNodes = document.querySelectorAll('#' + elementID + ' span');
+      for (var i = 0; i < numberNodes.length; i++) {
+        for(var n in numberToTurnOn) {
+          if(numberNodes[i].classList.contains(n)) {
+            if(numberToTurnOn[n]) {
+              numberNodes[i].classList.add('on');
+            }
+          }
+        }
+      }
+    },
+    clearNumbers: function () {
+      var number = document.querySelectorAll('.number span');
+      for (var n = 0; n < number.length; n++) {
+        if (number[n].classList.contains('on')) {
+          number[n].classList.remove('on');
+        }
+      }
+    }
+  };
+
+} ());
+      </pre>
+      <h4 class="title">file: 01-clock.js</h4>
+      <pre class="fifty-percent">
+// What makes the clock tick!
+
+var ClockJS = (function(){
+
+  'use strict';
+
+  var colorRand = false;
+  var colors = [
+    'blue',
+    'lightblue',
+    'yellow',
+    'orangeyellow',
+    'orange',
+    'orangered',
+    'green',
+    'limegreen',
+    'red',
+    'pink'
+  ];
+  return {
+    randomizeColors: function() {
+      var index = Math.floor(Math.random() * 10);
+      return ClockJS.changeColor(colors[index]);
+    },
+    getRandColor: function() {
+      return colorRand;
+    },
+    setRandColorStatus: function(bool) {
+      colorRand = bool;
+      return this;
+    },
+    toggleRandomColorStatus: function() {
+      colorRand = !colorRand;
+      if(colorRand) {
+        document.getElementById('randomStatus').textContent = "On";
+      }else{
+        document.getElementById('randomStatus').textContent = "Off";
+      }
+    },
+    getTime: function() {
+      ClockNumber.clearNumbers();
+      var time = new Date(),
+        hour = time.getHours(),
+        min = time.getMinutes(),
+        sec = time.getSeconds();
+      var hours = function() {
+        if(hour > 12) {
+          hour = hour - 12;
+          if(hour < 10) {
+            return "0" + hour;
+          }
+          return hour; 
+        }
+        return hour;
+      };
+      var mins = function() {
+        if(min < 10) {
+          return "0" + min;
+        }
+        return min; 
+      };
+      var secs = function() {
+        if(sec < 10) {
+          return "0" + sec;
+        }
+        return sec;
+      };
+      time = hours() + mins() + secs();
+      time = time.split('');
+      var sections = ['one','two','three','four','five','six'];
+      for(var i = 0; i < time.length; i++) {
+        ClockNumber.turnOnNumber(sections[i],time[i]);
+      }
+      if(colorRand) {
+        ClockJS.randomizeColors();
+      }
+    },
+    changeColor: function(color) {
+      var clock = document.querySelector('#clock');
+      var numberSpan = document.querySelectorAll('.number span');
+      var numberOff = document.querySelectorAll('.number span');
+      var colon = document.querySelectorAll('.colon span');
+      clock.style.borderColor = color;
+      for(var col=0; col < colon.length; col++) {
+        colon[col].style.backgroundColor = color;
+      }
+      for(var nSpan=0; nSpan < numberSpan.length; nSpan++) {
+        numberSpan[nSpan].style.backgroundColor = color;
+        numberSpan[nSpan].pseudoStyle('before','border-bottom-color',color + ' !important');
+        numberSpan[nSpan].pseudoStyle('after','border-top-color',color + ' !important');
+      }
+      return this;
+    },
+    startClock: function() {
+      setInterval(ClockJS.getTime,1000);
+      return this;
+    }
+  };
+
+}());
+      </pre>
+      <h4 class="title">file: 02-script.js</h4>
+      <pre class="fifty-percent">
+// Add onto the HTMLElement a pseudoStyle element style update!
+
+var UID = {
+  _current: 0,
+  getNew: function(){
+    this._current++;
+    return this._current;
+  }
+};
+
+HTMLElement.prototype.pseudoStyle = function(element,prop,value){
+  var _this = this;
+  var _sheetId = "pseudoStyles";
+  var _head = document.head || document.getElementsByTagName('head')[0];
+  var _sheet = document.getElementById(_sheetId) || document.createElement('style');
+  _sheet.id = _sheetId;
+  var className = "pseudoStyle" + UID.getNew();
+  
+  _this.className +=  " "+className; 
+  
+  _sheet.innerHTML += " ."+className+":"+element+"{"+prop+":"+value+"}";
+  _head.appendChild(_sheet);
+  return this;
+};
+
+
+// Functions to run at on document ready
+
+(function() {
+  'use strict';
+  
+  ClockJS.startClock()
+    .changeColor('yellow');
+
+
+})();
+      </pre>
+    </div>
+
+    
+    <script src="dist/js/digitalclock.min.js"></script>
+  </body>
+</html>

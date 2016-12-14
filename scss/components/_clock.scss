@@ -1,0 +1,149 @@
+#clock {
+  display: block;
+  width: 210px;
+  height: 50px;
+  padding: 10px;
+  margin: 20px auto 20px;
+  text-align: center;
+  transform: scale(1.2);
+  border: {
+    color: $clock-color;
+    width: 3px;
+    style: solid;
+    radius: 10px;
+  }
+
+  div {
+    margin: 0 2px;
+  }
+
+  .colon {
+    float: left;
+    position: relative;
+    height: 54px;
+    width: 4px;
+
+    span {
+      position: absolute;
+      display: block;
+      background-color: $clock-color;
+      height: 4px;
+      width: 4px;
+      border: {
+        radius: 50%;
+      }
+
+      &.top {
+        top: 15px;
+        left: 0;
+      }
+      &.bottom {
+        bottom: 15px;
+        left: 0;
+      }
+    }
+  }
+
+  .number {
+    float: left;
+    position: relative;
+    height: 50px;
+    width: 28px;
+    display: block;
+
+    span {
+      position: absolute;
+      display: block;
+      background-color: $clock-color;
+      opacity: 0.05;
+      height: 18px;
+      width: 4px;
+      @include transition(background-color $speed ease-in-out);
+
+      &::before {
+        position: absolute;
+        top: -4px;
+        right: 0;
+        content: '';
+        display: block;
+        border: {
+          right: 2px solid $trans;
+          top: 2px solid $trans;
+          bottom: 2px solid $clock-color;
+          left: 2px solid $trans;
+        }
+        opacity: 0.05;
+        @include transition(border-color $speed ease-in-out);
+      }
+      &::after {
+        position: absolute;
+        bottom: -4px;
+        right: 0;
+        content: '';
+        display: block;
+        border: {
+          right: 2px solid $trans;
+          top: 2px solid $clock-color;
+          bottom: 2px solid $trans;
+          left: 2px solid $trans;
+        }
+        opacity: 0.05;
+        @include transition(border-color $speed ease-in-out);
+      }
+
+      &.on {
+        opacity: 1;
+        
+        &::before {
+          opacity: 1;
+        }
+        &::after {
+          opacity: 1;
+        }
+      }
+
+      &.t {
+        top: -8px;
+        left: 12px;
+        transform: rotate(90deg);
+        position: relative;
+      }
+      &.tl {
+        top: 4px;
+        left: 0;
+      }
+      &.tr {
+        top: 4px;
+        right: 0;
+      }
+      &.m {
+        top: calc(50% - 9px);
+        left: 12px;
+        transform: rotate(90deg);
+      }
+      &.bl {
+        bottom: 4px;
+        left: 0;
+      }
+      &.br {
+        bottom: 4px;
+        right: 0;
+      }
+      &.b {
+        bottom: -8px;
+        left: 12px;
+        transform: rotate(90deg);
+      }
+    }
+  }
+}
+
+.fifty-percent {
+  background-color: rgba(255,255,255,0.1);
+  padding: 20px 10px;
+  border: {
+    radius: 4px;
+  }
+  overflow: auto;
+  @include box-shadow($inset-4);
+}
